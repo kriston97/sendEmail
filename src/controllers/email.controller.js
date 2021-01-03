@@ -228,6 +228,8 @@ exports.deleteScheduledEmail = async (req,res) =>{
     });
     
   } catch (error) {
-    
+    res
+      .status(400)
+      .send({ message: "Error Occurred", error: error.toString() });
   }
 }
