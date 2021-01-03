@@ -3,9 +3,9 @@ const moment = require("moment-timezone");
 const nodemailer = require("nodemailer");
 
 exports.scheduleEmail = async (req, res) => {
-  const { body,query } = req;
+  const { body, query } = req;
   try {
-	  console.log(query.id)
+    console.log(query.id);
     if (
       !body.recipient ||
       !body.subject ||
@@ -37,16 +37,12 @@ exports.scheduleEmail = async (req, res) => {
     }
     if (body.scheduledTime) {
       let datereg = /^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
-      if (datereg.test(body.scheduledTime )== false) {
+      if (datereg.test(body.scheduledTime) == false) {
         res.status(400).send({ message: "Time should be in format HH:MM" });
         return;
-	  }
-	  if(![00,30].includes(parseInt(body.scheduledTime.split(":")[1]))){
-		res.status(400).send({ message: "Email can be scheduled only in interval of 30 minutes",example : "15:30 , 20:00" });
-        return;
-	  }
-	}
-	let currentTime = moment().tz("Asia/Calcutta").valueOf();
+      }
+    }
+    let currentTime = moment().tz("Asia/Calcutta").valueOf();
     let ScheduledTime = moment(`${body.scheduledDate} ${body.scheduledTime}`)
       .tz("Asia/Calcutta")
       .valueOf();
@@ -105,24 +101,20 @@ exports.rescheduleEmail = async (req, res) => {
       return;
     }
     if (body.scheduledDate) {
-		let reg = /^\d{4}\-\d{1,2}\-\d{1,2}$/;
-		if (reg.test(body.scheduledDate) == false) {
-		  res
-			.status(400)
-			.send({ message: "date should be in format YYYY-MM-DD" });
-		  return;
-		}
+      let reg = /^\d{4}\-\d{1,2}\-\d{1,2}$/;
+      if (reg.test(body.scheduledDate) == false) {
+        res
+          .status(400)
+          .send({ message: "date should be in format YYYY-MM-DD" });
+        return;
+      }
     }
     if (body.scheduledTime) {
       let datereg = /^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
       if (datereg.test(body.scheduledTime) == false) {
         res.status(400).send({ message: "Time should be in format HH:MM" });
         return;
-	  }
-	  if(![00,30].includes(parseInt(body.scheduledTime.split(":")[1]))){
-		res.status(400).send({ message: "Email can be scheduled only in interval of 30 minutes",example : "15:30 , 20:00" });
-        return;
-	  }
+      }
     }
     let currentTime = moment().tz("Asia/Calcutta").valueOf();
     let ScheduledTime = moment(`${body.scheduledDate} ${body.scheduledTime}`)
@@ -164,13 +156,15 @@ exports.rescheduleEmail = async (req, res) => {
 exports.sendEmail = async (date, time) => {
   try {
     const emailDoc = await emailSchema.find({
-      scheduledDate: date,
-      scheduledTime: time,
+      scheduledDate: date.toString(),
+      scheduledTime: time.toString(),
       status: "PENDING",
     });
     if (emailDoc && emailDoc.length) {
       const transporter = nodemailer.createTransport({
         service: "gmail",
+        host: "smtp.gmail.com",
+        secure: false,
         auth: {
           user: process.env.SOURCE_EMAIL,
           pass: process.env.PASSWORD,
@@ -186,11 +180,9 @@ exports.sendEmail = async (date, time) => {
         };
         transporter.sendMail(mailOptions, async function (error, info) {
           if (error) {
-            console.log(error);
             emailStatus = "FAILED";
           } else {
             emailStatus = "SUCCESS";
-            console.log("Email sent: " + info.response);
           }
           await emailSchema.findByIdAndUpdate(
             ele.id,

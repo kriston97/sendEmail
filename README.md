@@ -10,9 +10,7 @@ Features :
 
 #### Note
 
-1. Source email supports only gmail addressess
-2. Emails can only be scheduled/Rescheduled in intervals of 30 minutes.<br>
-   example - 02:00 , 15:30 , 20:30
+1. Source email supports only gmail addressess(enable less secure app access in your gmail account)
 
 ## Requirements
 

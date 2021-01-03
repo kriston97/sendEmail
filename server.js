@@ -7,6 +7,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const PORT = 6000//process.env.PORT
 const emailController = require("./src/controllers/email.controller");
+const moment = require("moment-timezone");
 
 // create express app
 const app = express();
@@ -39,10 +40,12 @@ app.get("/", (req, res) => {
   services({ app });
 
   try {
-    cron.schedule("* /30 * * *", function () {
-		let currentDate = moment().tz("Asia/Calcutta").format("YYYY-MM-DD")
-		let currentTime = moment().tz("Asia/Calcutta").format("HH:MM")
-		emailController.sendEmail(currentDate,currentTime)
+    cron.schedule("* * * * *", function () {
+      console.log("Send Email started")
+      let currentDate = moment().tz("Asia/Calcutta").format("YYYY-MM-DD");
+      let time = moment().tz("Asia/Calcutta");
+      let currentTime = `${time.toString().split(" ")[4].split(":")[0]}:${time.toString().split(" ")[4].split(":")[1]}`
+		  emailController.sendEmail(currentDate,currentTime)
     });
   } catch (error) {
     console.log("Error in sending mail " + error);
