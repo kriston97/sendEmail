@@ -68,3 +68,14 @@ curl --location --request POST 'http://localhost:6000/email/v1/reschedule' \
 ```Terminal
 curl --location --request GET 'http://localhost:6000/email/v1/get-status'
 ```
+
+4. Delete a scheduled email
+
+```Terminal
+curl --location --request POST 'http://localhost:6000/email/v1/delete' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "id" :"5ff194b9fb6298247c161931"
+}'
+
+```

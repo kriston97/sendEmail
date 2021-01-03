@@ -41,7 +41,6 @@ app.get("/", (req, res) => {
 
   try {
     cron.schedule("* * * * *", function () {
-      console.log("Send Email started")
       let currentDate = moment().tz("Asia/Calcutta").format("YYYY-MM-DD");
       let time = moment().tz("Asia/Calcutta");
       let currentTime = `${time.toString().split(" ")[4].split(":")[0]}:${time.toString().split(" ")[4].split(":")[1]}`

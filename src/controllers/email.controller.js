@@ -200,3 +200,34 @@ exports.sendEmail = async (date, time) => {
     console.log(`Error Occurred - ${error.toString()}`);
   }
 };
+
+exports.deleteScheduledEmail = async (req,res) =>{
+  const {body} = req;
+  try {
+    if(!body.id){
+      res
+      .status(400)
+      .send({ message: "id missing in body" });
+    }
+    const emailDoc = await emailSchema.findById(body.id);
+    if(!emailDoc || !emailDoc.id){
+      res
+      .status(404)
+      .send({ message: "Record not found"});
+        return;
+    }
+    await emailSchema.findByIdAndRemove(body.id, function (err, doc) {
+      if (err) {
+        res
+      .status(400)
+      .send({ message: "Error Occurred", error: err.toString() });
+        return;
+      } else {
+        res.status(200).send({ message: "Email deleted successfully" });
+      }
+    });
+    
+  } catch (error) {
+    
+  }
+}
