@@ -7,6 +7,7 @@ Features :
 1. Schedule an Email.
 2. Reschedule an Email.
 3. Get details of scheduled emails.
+4. Delete a scheduled email.
 
 #### Note
 
